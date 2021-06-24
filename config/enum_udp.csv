@@ -1,0 +1,162 @@
+MESSAGGIO	NOME_BIT	POSIZIONE	ENUM
+GW_Multi_health_status_INS	CS status	16	1:FAILURE; 2:OPERATIONAL; 3: TRAINING;
+GW_Multi_health_status_INS	DRMU status	18	1:NON OPERATIONAL; 2 :OPERATIONAL STAND-BY; 3:OPERATIONAL RECORDING;
+GW_Multi_health_status_INS	CSS status	22	1: NON OPERATIONAL; 2: OPERATIONAL;
+GW_SCGF_change_configuration_order_INS	Configuration request	20	0: Local; 1: Autonomous ;2: Integrated
+GW_SCGF_designation_order_INS	Designation Type	20	1:CST; 2: Position;
+GW_SCGF_designation_order_INS	Kinematics Type	38	1: 3D CARTESIAN KINEMATICS; 2:3D CARTESIAN POSITION; 3:2D CARTESIAN KINEMATICS; 4:2D CARTESIAN POSITION;5:2D POLAR KINEMATICS; 6 :2D POLAR SURFACE KINEMATICS;7 :2D POLAR POSITION; 8:2D POLAR SURFACE POSITION;9:1D POLAR POSITION;10:EW 1D POLAR POSITION; 11:EW 2D POLAR POSITION;
+GW_SCGF_designation_order_INS	firing_authorization	24	0: firing not authorised; 1: firing authorised;
+GW_SCGF_servo_control_INS	Gun Servo	20	0: No change;1: OFF;2: ON;
+GW_SCGF_servo_control_INS	Stabilization	22	0: No change;1: OFF;2: ON;
+GW_SCGF_servo_control_INS	Manual Control	24	0: No Change; 1:Slew_to_Parking_Position;
+GW_SCGF_servo_control_INS	Drift Compensation	29	0: No change;1: OFF;2: ON;
+GW_SCGF_update_cst_kinematics_designation_INS	Kinematics Type	38	1: 3D CARTESIAN KINEMATICS; 2:3D CARTESIAN POSITION; 3:2D CARTESIAN KINEMATICS; 4:2D CARTESIAN POSITION;5:2D POLAR KINEMATICS; 6 :2D POLAR SURFACE KINEMATICS;7 :2D POLAR POSITION; 8:2D POLAR SURFACE POSITION;9:1D POLAR POSITION; 10:EW 1D POLAR POSITION; 11:EW 2D POLAR POSITION;
+GW_SCGP_change_configuration_order_INS	Configuration request	20	0: Local; 1: Autonomous ;2: Integrated
+GW_SCGP_designation_order_INS	Designation Type	20	1:CST; 2: Position;
+GW_SCGP_designation_order_INS	Kinematics Type	38	1: 3D CARTESIAN KINEMATICS; 2:3D CARTESIAN POSITION; 3:2D CARTESIAN KINEMATICS; 4:2D CARTESIAN POSITION;5:2D POLAR KINEMATICS; 6 :2D POLAR SURFACE KINEMATICS;7 :2D POLAR POSITION; 8:2D POLAR SURFACE POSITION;9:1D POLAR POSITION;10:EW 1D POLAR POSITION; 11:EW 2D POLAR POSITION;
+GW_SCGP_designation_order_INS	firing_authorization	24	0: firing not authorised; 1: firing authorised;
+GW_SCGP_servo_control_INS	Gun Servo	20	0: No change;1: OFF;2: ON;
+GW_SCGP_servo_control_INS	Stabilization	22	0: No change;1: OFF;2: ON;
+GW_SCGP_servo_control_INS	Manual Control	24	0: No Change; 1:Slew_to_Parking_Position;
+GW_SCGP_servo_control_INS	Drift Compensation	29	0: No change;1: OFF;2: ON;
+GW_SCGP_update_cst_kinematics_designation_INS	Kinematics Type	38	1: 3D CARTESIAN KINEMATICS; 2:3D CARTESIAN POSITION; 3:2D CARTESIAN KINEMATICS; 4:2D CARTESIAN POSITION;5:2D POLAR KINEMATICS; 6 :2D POLAR SURFACE KINEMATICS;7 :2D POLAR POSITION; 8:2D POLAR SURFACE POSITION;9:1D POLAR POSITION; 10:EW 1D POLAR POSITION; 11:EW 2D POLAR POSITION;
+NAVS_MULTI_gyro_aft_nav_data_10ms_INS	Sensor reference	16	0: GYRO AFT;1: GYRO FORE;
+NAVS_MULTI_gyro_aft_nav_data_10ms_INS	Gyro readiness state	18	0:OPERATIONAL;1: SIMULATION;2: ALIGNMENT;
+NAVS_MULTI_gyro_aft_nav_data_10ms_INS	Gyro availability	20	0: AVAILABLE;1: DEGRADED;2: FAILED;
+NAVS_MULTI_gyro_fore_nav_data_10ms_INS	Sensor reference	16	0: GYRO AFT;1: GYRO FORE;
+NAVS_MULTI_gyro_fore_nav_data_10ms_INS	Gyro readiness state	18	0:OPERATIONAL;1: SIMULATION;2: ALIGNMENT;
+NAVS_MULTI_gyro_fore_nav_data_10ms_INS	Gyro availability	20	0: AVAILABLE;1: DEGRADED;2: FAILED;
+NAVS_MULTI_health_status_INS	Readiness State	16	0: OPERATIONAL;1: SIMULATION;
+NAVS_MULTI_health_status_INS	Availability	18	0: AVAILABLE;1: DEGRADED;2: FAILED
+NAVS_MULTI_nav_data_100ms_INS	Attitude and velocities validity	104	0:AVAILABLE; Own ship attitude and velocities are provided by the Gyros. 1: DEGRADED; Own ship attitude and velocity
+NAVS_MULTI_nav_data_100ms_INS	Heading validity	106	0:AVAILABLE; Heading is provided by the Gyros.1: DEGRADED; Heading is provided by the Magnetic Compass.2: FAILED; Heading is not available Heading validity.
+NAVS_MULTI_nav_data_100ms_INS	Course and Speed over ground validity	108	0:AVAILABLE; Course and Speed over ground are provided by the Gyros. 1: DEGRADED; Course and Speed over ground are provided by the GPSs.2: FAILED; Course and Speed over ground are not available Course and Speed over ground validity.
+NAVS_MULTI_nav_data_100ms_INS	Position validity	110	0:AVAILABLE; The ship position is provided by the Gyros. 1: DEGRADED; The ship position is provided by the GPSs or is entered manuallyby the operator. 2: FAILED; The ship position is not available
+NAVS_MULTI_nav_data_100ms_INS	Set and drift validity	112	0:Available and drift are provided by the Gyros.1: DEGRADED; The ship position is entered manually by the operator.2:FAILED; The ship position is not available
+NAVS_MULTI_nav_data_100ms_INS	Water depth validity	114	0:AVAILABLE; The water depth is provided by the Echosounder.2: FAILED; The water depth is not available water depth is entered manually by the operator.1: DEGRADED; The
+NAVS_MULTI_wind_and_landing_deck_data_INS	sensor_availability	16	0: AVAILABLE; Wind data are provided by environmental sensors (sensors 1 and 2).1: DEGRADED; Wind data are manually introduced by the operator.2:FAILED; Wind data are not available
+NAVS_MULTI_wind_and_landing_deck_data_INS	air_temp_origin	34	1:MANUAL MODE; (air temperature value is manually set by NAVS operator).2:AUTOMATIC MODE; (air temperature value is automatically set by NAVS from the best sensor available).3:ANEMOMETER1; (data from anemometer 1 are forced by NAVS operator).4:ANEMOMETER2; (data from anemometer 2 are forced by NAVS operator)
+NAVS_MULTI_wind_and_landing_deck_data_INS	air_hum_ori	40	1:MANUAL MODE; (humidity value is manually set by NAVS operator). 2:AUTOMATIC MODE;(humidity value is automatically set by NAVS from the best sensor available).3:ANEMOMETER1; (data from anemometer 1 are forced by NAVS operator).4:ANEMOMETER2; (data from anemometer 2 are forced by NAVS operator)
+NAVS_MULTI_wind_and_landing_deck_data_INS	dew_point_temp_origin	46	1:MANUAL MODE; (dew point temperature value is manually set by NAVS operator).2:AUTOMATIC MODE; (dew point temperature value is automatically set by NAVS from the best sensor available).3:ANEMOMETER1; (data from anemometer 1 are forced by NAVS operator).4:ANEMOMETER2; (data from anemometer 2 are forced by NAVS
+NAVS_MULTI_wind_and_landing_deck_data_INS	atm_pres_orig	52	1: MANUAL MODE; (atmospheric pressure value is manually set by NAVS operator).2: AUTOMATIC MODE; atmospheric pressure value is automatically set by NAVS from the best sensor available).3:ANEMOMETER1; (data from anemometer 1 are forced by NAVS operator).4:ANEMOMETER2; (data from anemometer 2 are forced by NAVS operator)
+NAVS_MULTI_wind_and_landing_deck_data_INS	sea_surface_temp_origin	62	1:Manual Mode; (sea temperature value is manually set by the NAVS operator).2:Sea Temperature Sensor; (sea temperature value is automatically filled in by the NAVS with the data received from the temperature sensor)
+SCGF_CS_cursors_report_INS	kinematic_cursors_state	20	1:Cursors Disabled;2:Cursors Enabled;3:Cursors Updating;
+SCGF_GW_designation_report_INS	Designation Type	20	1 : CST; 2 : Position;
+SCGF_GW_designation_report_INS	Designation Status	30	0 : Designation ceased; 1 : Designation in pause; 2 : Designation in progress; 3 : Designation failure;
+SCGF_CS_firing_burst_report_INS	burst_mode_selected	20	1:Single shot;2:Short burst;3:Long burst;4:Continuous burst;
+SCGF_CS_installation_data_INS	type_of_gun	20	0:None;1:25 mm;2:Spare;
+SCGF_CS_integrated_safety_settings_report_INS	fire_enable_state	20	1:Firing Disabled; 2:Firing Enabled;
+SCGF_CS_integrated_safety_settings_report_INS	fire_without_tracking_state	22	1:Not Authorised;2:Authorised;
+SCGF_CS_integrated_safety_settings_report_INS	free_engagement_authorisation_state	24	1:Not Authorised;2:Authorised;
+SCGF_CS_IR_report_INS	state	20	0:OFF;1:Initialization;2:Ready;3:Failure;
+SCGF_CS_IR_report_INS	polarity_color	22	1:White_HOT;2:Black_HOT;
+SCGF_CS_IR_report_INS	gain	24	1:Negative step;2:Positive step;
+SCGF_CS_IR_report_INS	calibrate	26	1:OFF;2:In progress;
+SCGF_CS_IR_report_INS	brightness	28	1:Negative step;2:Positive step;
+SCGF_CS_IR_report_INS	normal_focus_reset	30	1:OFF;2:ON;
+SCGF_CS_IR_report_INS	focus	32	1:Negative step; 2:Positive step;
+SCGF_CS_IR_report_INS	agc_control	34	0:No change (Not Used);1:Semi automatic;2:Full automatic;
+SCGF_CS_IR_report_INS	State	20	0 : OFF; 1 : Initialization; 2 : Ready; 3 : Failure;
+SCGF_CS_IR_report_INS	Polarity Color	22	1 : White_HOT; 2 : Black_HOT;
+SCGF_CS_IR_report_INS	Gain	24	1 : Negative step; 2 : Positive step;
+SCGF_CS_IR_report_INS	Calibrate	26	1 : OFF; 2 : In progress;
+SCGF_CS_IR_report_INS	Brightness	28	1 : Negative step; 2 : Positive step;
+SCGF_CS_IR_report_INS	Normal Focus Reset	30	1 : OFF; 2 : ON;
+SCGF_CS_IR_report_INS	Focus	32	1 : Negative step; 2 : Positive step;
+SCGF_CS_IR_report_INS	AGC Control	34	0 : No change (Not Used); 1 : Semi automatic; 2 : Full automatic;
+SCGF_CS_loading_report_INS	last_round_left	20	0:No Last Round; 1:Last Round Reached; 2:Last Round Bypass; 
+SCGF_CS_loading_report_INS	last_round_right	22	0:No Last Round; 1:Last Round Reached; 2:Last Round Bypass;
+SCGF_CS_loading_report_INS	recocking_state	24	0:Not recocking; 1:Recocking executed; 2:Recocking in progress; 3:Recocking failure;
+SCGF_CS_loading_report_INS	round_type_left	26	1:MULTI_HE; 2:APFSDS; 3:APDS; 4:FAPDS; 5:TPDS;
+SCGF_CS_loading_report_INS	round_type_right	30	1:MULTI_HE; 2:APFSDS; 3:APDS; 4:FAPDS; 5:TPDS;
+SCGF_CS_loading_report_INS	ammunition_box_selected	34	1:Left; 2:Neutral; 3:Right;
+SCGF_CS_LRF_inhibition_report_INS	inhibition_constraint	20	0:Authorized;1:Inhibited;
+SCGF_CS_LRF_report_INS	state	20	0:Standby;1:Emitting;2:Failure;
+SCGF_CS_LRF_report_INS	frequency	22	0:No change (Not Used);1:0,33 Hz;2:1 Hz;
+SCGF_CS_LRF_report_INS	range_val	24	0:No echo;1:Echo in minimum distance;2:Valid range;
+SCGF_CS_range_report_INS	range_source	20	0:No change (Not Used);1:Designation; 2:Manual Range; 3:LRF range;
+SCGF_CS_tracker_report_INS	enabled	20	1:OFF; 2:ON;
+SCGF_CS_tracker_report_INS	algorithm	22	1:Correlation; 2:Contrast;
+SCGF_CS_tracker_report_INS	state	24	0:Not tracking;1:Tracking; 2:Memory;
+SCGF_CS_tracker_report_INS	window_resize	26	0:No change (Not Used); 1:Window Size Decreased; 2:Window Size Increased;
+SCGF_MULTI_health_status_INS	Configuration	16	0 : Local; 1 : Autonomous; 2 : Integrated;
+SCGF_MULTI_health_status_INS	Mode	18	1 : Local Indipendent; 2 : Local Training; 3 : Remote Integrated; 4 : Remote Autonomous;
+SCGF_MULTI_health_status_INS	State	20	0 : Full Operative; 1 : Fault; 2 : Degraded;
+SCGP_CS_cursors_report_INS	kinematic_cursors_state	20	1:Cursors Disabled;2:Cursors Enabled;3:Cursors Updating;
+SCGP_GW_designation_report_INS	Designation Type	20	1 : CST; 2 : Position;
+SCGP_GW_designation_report_INS	Designation Status	30	0 : Designation ceased; 1 : Designation in pause; 2 : Designation in progress; 3 : Designation failure;
+SCGP_CS_firing_burst_report_INS	burst_mode_selected	20	1:Single shot;2:Short burst;3:Long burst;4:Continuous burst;
+SCGP_CS_installation_data_INS	type_of_gun	20	0:None;1:25 mm;2:Spare;
+SCGP_CS_integrated_safety_settings_report_INS	fire_enable_state	20	1:Firing Disabled; 2:Firing Enabled;
+SCGP_CS_integrated_safety_settings_report_INS	fire_without_tracking_state	22	1:Not Authorised;2:Authorised;
+SCGP_CS_integrated_safety_settings_report_INS	free_engagement_authorisation_state	24	1:Not Authorised;2:Authorised;
+SCGP_CS_IR_report_INS	state	20	0:OFF;1:Initialization;2:Ready;3:Failure;
+SCGP_CS_IR_report_INS	polarity_color	22	1:White_HOT;2:Black_HOT;
+SCGP_CS_IR_report_INS	gain	24	1:Negative step;2:Positive step;
+SCGP_CS_IR_report_INS	calibrate	26	1:OFF;2:In progress;
+SCGP_CS_IR_report_INS	brightness	28	1:Negative step;2:Positive step;
+SCGP_CS_IR_report_INS	normal_focus_reset	30	1:OFF;2:ON;
+SCGP_CS_IR_report_INS	focus	32	1:Negative step; 2:Positive step;
+SCGP_CS_IR_report_INS	agc_control	34	0:No change (Not Used);1:Semi automatic;2:Full automatic;
+SCGP_CS_IR_report_INS	State	20	0 : OFF; 1 : Initialization; 2 : Ready; 3 : Failure;
+SCGP_CS_IR_report_INS	Polarity Color	22	1 : White_HOT; 2 : Black_HOT;
+SCGP_CS_IR_report_INS	Gain	24	1 : Negative step; 2 : Positive step;
+SCGP_CS_IR_report_INS	Calibrate	26	1 : OFF; 2 : In progress;
+SCGP_CS_IR_report_INS	Brightness	28	1 : Negative step; 2 : Positive step;
+SCGP_CS_IR_report_INS	Normal Focus Reset	30	1 : OFF; 2 : ON;
+SCGP_CS_IR_report_INS	Focus	32	1 : Negative step; 2 : Positive step;
+SCGP_CS_IR_report_INS	AGC Control	34	0 : No change (Not Used); 1 : Semi automatic; 2 : Full automatic;
+SCGP_CS_loading_report_INS	last_round_left	20	0:No Last Round; 1:Last Round Reached; 2:Last Round Bypass; 
+SCGP_CS_loading_report_INS	last_round_right	22	0:No Last Round; 1:Last Round Reached; 2:Last Round Bypass;
+SCGP_CS_loading_report_INS	recocking_state	24	0:Not recocking; 1:Recocking executed; 2:Recocking in progress; 3:Recocking failure;
+SCGP_CS_loading_report_INS	round_type_left	26	1:MULTI_HE; 2:APFSDS; 3:APDS; 4:FAPDS; 5:TPDS;
+SCGP_CS_loading_report_INS	round_type_right	30	1:MULTI_HE; 2:APFSDS; 3:APDS; 4:FAPDS; 5:TPDS;
+SCGP_CS_loading_report_INS	ammunition_box_selected	34	1:Left; 2:Neutral; 3:Right;
+SCGP_CS_LRF_inhibition_report_INS	inhibition_constraint	20	0:Authorized;1:Inhibited;
+SCGP_CS_LRF_report_INS	state	20	0:Standby;1:Emitting;2:Failure;
+SCGP_CS_LRF_report_INS	frequency	22	0:No change (Not Used);1:0,33 Hz;2:1 Hz;
+SCGP_CS_LRF_report_INS	range_val	24	0:No echo;1:Echo in minimum distance;2:Valid range;
+SCGP_CS_range_report_INS	range_source	20	0:No change (Not Used);1:Designation; 2:Manual Range; 3:LRF range;
+SCGP_CS_tracker_report_INS	enabled	20	1:OFF; 2:ON;
+SCGP_CS_tracker_report_INS	algorithm	22	1:Correlation; 2:Contrast;
+SCGP_CS_tracker_report_INS	state	24	0:Not tracking;1:Tracking; 2:Memory;
+SCGP_CS_tracker_report_INS	window_resize	26	0:No change (Not Used); 1:Window Size Decreased; 2:Window Size Increased;
+SCGP_MULTI_health_status_INS	Configuration	16	0 : Local; 1 : Autonomous; 2 : Integrated;
+SCGP_MULTI_health_status_INS	Mode	18	1 : Local Indipendent; 2 : Local Training; 3 : Remote Integrated; 4 : Remote Autonomous;
+SCGP_MULTI_health_status_INS	State	20	0 : Full Operative; 1 : Fault; 2 : Degraded;
+SCGS_GW_designation_report_INS	Designation Type	20	1 : CST; 2 : Position;
+SCGS_GW_designation_report_INS	Designation Status	30	0 : Designation ceased; 1 : Designation in pause; 2 : Designation in progress; 3 : Designation failure;
+SCGS_CS_IR_report_INS	state	20	0:OFF;1:Initialization;2:Ready;3:Failure;
+SCGS_CS_IR_report_INS	polarity_color	22	1:White_HOT;2:Black_HOT;
+SCGS_CS_IR_report_INS	gain	24	1:Negative step;2:Positive step;
+SCGS_CS_IR_report_INS	calibrate	26	1:OFF;2:In progress;
+SCGS_CS_IR_report_INS	brightness	28	1:Negative step;2:Positive step;
+SCGS_CS_IR_report_INS	normal_focus_reset	30	1:OFF;2:ON;
+SCGS_CS_IR_report_INS	focus	32	1:Negative step; 2:Positive step;
+SCGS_CS_IR_report_INS	agc_control	34	0:No change (Not Used);1:Semi automatic;2:Full automatic;
+SCGS_CS_IR_report_INS	State	20	0 : OFF; 1 : Initialization; 2 : Ready; 3 : Failure;
+SCGS_CS_IR_report_INS	Polarity Color	22	1 : White_HOT; 2 : Black_HOT;
+SCGS_CS_IR_report_INS	Gain	24	1 : Negative step; 2 : Positive step;
+SCGS_CS_IR_report_INS	Calibrate	26	1 : OFF; 2 : In progress;
+SCGS_CS_IR_report_INS	Brightness	28	1 : Negative step; 2 : Positive step;
+SCGS_CS_IR_report_INS	Normal Focus Reset	30	1 : OFF; 2 : ON;
+SCGS_CS_IR_report_INS	Focus	32	1 : Negative step; 2 : Positive step;
+SCGS_CS_IR_report_INS	AGC Control	34	0 : No change (Not Used); 1 : Semi automatic; 2 : Full automatic;
+SCGS_CS_loading_report_INS	last_round_left	20	0:No Last Round; 1:Last Round Reached; 2:Last Round Bypass; 
+SCGS_CS_loading_report_INS	last_round_right	22	0:No Last Round; 1:Last Round Reached; 2:Last Round Bypass;
+SCGS_CS_loading_report_INS	recocking_state	24	0:Not recocking; 1:Recocking executed; 2:Recocking in progress; 3:Recocking failure;
+SCGS_CS_loading_report_INS	round_type_left	26	1:MULTI_HE; 2:APFSDS; 3:APDS; 4:FAPDS; 5:TPDS;
+SCGS_CS_loading_report_INS	round_type_right	30	1:MULTI_HE; 2:APFSDS; 3:APDS; 4:FAPDS; 5:TPDS;
+SCGS_CS_loading_report_INS	ammunition_box_selected	34	1:Left; 2:Neutral; 3:Right;
+SCGS_CS_LRF_inhibition_report_INS	inhibition_constraint	20	0:Authorized;1:Inhibited;
+SCGS_CS_LRF_report_INS	state	20	0:Standby;1:Emitting;2:Failure;
+SCGS_CS_LRF_report_INS	frequency	22	0:No change (Not Used);1:0,33 Hz;2:1 Hz;
+SCGS_CS_LRF_report_INS	range_val	24	0:No echo;1:Echo in minimum distance;2:Valid range;
+SCGS_CS_range_report_INS	range_source	20	0:No change (Not Used);1:Designation; 2:Manual Range; 3:LRF range;
+SCGS_CS_tracker_report_INS	enabled	20	1:OFF; 2:ON;
+SCGS_CS_tracker_report_INS	algorithm	22	1:Correlation; 2:Contrast;
+SCGS_CS_tracker_report_INS	state	24	0:Not tracking;1:Tracking; 2:Memory;
+SCGS_CS_tracker_report_INS	window_resize	26	0:No change (Not Used); 1:Window Size Decreased; 2:Window Size Increased;
+SCGS_MULTI_health_status_INS	Configuration	16	0 : Local; 1 : Autonomous; 2 : Integrated;
+SCGS_MULTI_health_status_INS	Mode	18	1 : Local Indipendent; 2 : Local Training; 3 : Remote Integrated; 4 : Remote Autonomous;
+SCGS_MULTI_health_status_INS	State	20	0 : Full Operative; 1 : Fault; 2 : Degraded;

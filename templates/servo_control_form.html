@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% from "_formhelpers.html" import render_field %}
+{% block content %}
+<form method=post>
+  {% if msg %}
+    <h5>{{msg}}</h5>
+  {%endif%}
+  <div class="col-md-4">
+  <table class="table table-bordered table-striped ">
+    {{ form.hidden_tag() }}
+    {{ render_field(form.action_id) }}
+    {{ render_field(form.selectDestination) }}<br>
+    {{ render_field(form.gun_servo) }}
+    {{ render_field(form.stabilization) }}
+    {{ render_field(form.manual_control) }}
+    {{ render_field(form.parking_position) }}
+    {{ render_field(form.left_loading_position) }}
+    {{ render_field(form.right_loading_position) }}
+    {{ render_field(form.drift_compensation) }}
+    </table>
+  <p><input type=submit value=Send_Message></p>
+  </div>
+</form>
+{% endblock %}

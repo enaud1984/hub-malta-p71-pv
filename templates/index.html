@@ -1,0 +1,376 @@
+{% extends 'base.html' %}
+{% block scripts %}
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <script src="{{ url_for('static', filename='js/jquery-1.12.4.min.js')}}"></script>
+    <!--<script src="//code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+    -->
+    <script src="{{ url_for('static', filename='js/socket.io.js')}}"></script>
+    <link href="{{ url_for('static', filename='node_modules/bootstrap-table/dist/bootstrap-table.min.css')}}" rel="stylesheet" type="text/css">
+    <script src="{{ url_for('static', filename='node_modules/bootstrap-table/dist/bootstrap-table.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='node_modules/bootstrap-table/dist/locale/bootstrap-table-it-IT.min.js')}}"></script>
+    <!--<script src="{{ url_for('static', filename='/node_modules/bootstrap-table/dist/bootstrap-table-locale-all.min.js')}}"></script>-->
+    <link href="{{ url_for('static', filename='node_modules/jsoneditor/dist/jsoneditor.min.css')}}" rel="stylesheet" type="text/css">
+    <script src="{{ url_for('static', filename='node_modules/jsoneditor/dist/jsoneditor.min.js')}}"></script>
+    <script type="text/javascript" charset="utf-8">
+        function format_for_treeview(data, arr) {
+            for (var key in data) {
+            if (Array.isArray(data[key]) || data[key].toString() === "[object Object]") {
+                // when data[key] is an array or object
+                var nodes = [];
+                var completedNodes = format_for_treeview(data[key], nodes);
+                arr.push({
+                text: key,
+                nodes: completedNodes
+                });
+            } else {
+                // when data[key] is just strings or integer values
+                arr.push({
+                text: key + " : " + data[key]
+                });
+            }
+            }
+            return arr;
+        }
+        var editors=[]
+        var map_MsgIn={};
+        var listMsgOut=[];
+        let map_msg={};
+        var mapActionPending={};
+        var mapActionReceived={};
+        var list_error=[];
+        function convertJson(msg){
+            return msg.data.replace(/\'/gi,"\"").replace(/None/gi,"\"\"").replace(/False/gi,"false").replace(/True/gi,"true").replace(/,}/gi,'}');
+        }
+
+        function manageEdit(btn,num, arr) {
+            if (typeof arr === 'object' && Array.isArray(arr)){
+                mapRes={}
+                for(x of arr){
+                    mapRes[x["name"]]=x
+                }
+                editors[num].set(mapRes)
+            } else{
+                editors[num].set(arr)
+            }
+            const container = document.getElementById("jsoneditor"+(num+1))
+            if (container.style.display === "none") {
+                    container.style.display = "block";
+                    btn.innerHTML = "Nascondi lista"
+            } else {
+                    container.style.display = "none";
+                    btn.innerHTML ="Edita"
+            }
+        }
+        
+        
+        $(document).ready(function() {
+            // Use a "/test" namespace.
+            // An application can open a connection on multiple namespaces, and
+            // Socket.IO will multiplex all those connections on a single
+            // physical channel. If you don't care about multiple channels, you
+            // can set the namespace to an empty string.
+            namespace = '/test';
+            
+            //
+            // The connection URL has the following format, relative to the current page:
+            //     http[s]://<domain>:<port>[/<namespace>]
+            var socket = io(namespace);
+            //,{
+            //    transports: ['websocket','polling']
+            //});
+            for (let step = 1; step < 6; step++) {
+                const container = document.getElementById("jsoneditor"+step)
+                const options = {}
+                const editor = new JSONEditor(container, options);
+              
+                if (container.style.display === "none") {
+                    container.style.display = "block";
+                } else {
+                    container.style.display = "none";
+                }
+                editors.push(editor)
+                //$('#table'+step).bootstrapTable({data: []});
+                //$('#table'+step).addClass("d-none");
+            }
+          
+            // Event handler for new connections.
+            // The callback function is invoked when a connection with the
+            // server is established.
+
+            socket.on('connect', function() {
+                console.log('CONNECT EVENT');
+                socket.emit('connectHandler', {msg: 'I\'m connected!'});
+            });
+
+            socket.on('disconnect', function() {
+                console.log('DISCONNECT EVENT');
+                //socket.emit('connectHandler', {msg: 'I\'m connected!'});
+            });
+
+            // Event handler for server sent data.
+            // The callback function is invoked whenever the server emits data
+            // to the client. The data is then displayed in the "Received"
+            // section of the page.
+            socket.on('mapMsgIN', function(msg) {
+                let json =convertJson(msg);
+
+                let obj=JSON.parse(json);
+                if (obj.hasOwnProperty('reported_action_id')){
+                    map_MsgIn[obj.name+"["+obj.reported_action_id+"]"]=obj;
+                }else if (obj.hasOwnProperty('action_id') && obj.action_id){
+                    map_MsgIn[obj.name+"["+obj.action_id+"]"]=obj;
+                }
+                else {
+                    map_MsgIn[obj.name] = obj;
+                }
+                ///$('#log1').empty();
+                let msgs=[];
+                let msgs_text=[];
+                for (let key in map_MsgIn) {
+                    //$('#log1').append('<br>' + $('<div/>').text(JSON.stringify(map_msg[key], undefined, 2)+"\r\n").html());
+                    msgs.push(map_MsgIn[key]);
+                    let s = JSON.stringify(obj).replace(/\"/g,"'");
+                    msgs_text.push({"name":obj.name,"timestamp":obj.timestamp,"msg":s})
+                }
+                let textareaText=JSON.stringify(msgs_text, undefined, 2)
+                document.getElementById('log1').innerHTML = textareaText;
+                //$('#table1').bootstrapTable({data: msgs});
+            });
+            socket.on('mapMsgOUT', function(msg) {
+                try
+                {
+                    if (listMsgOut.length > 5) {
+                        $('#log2').empty()
+                        listMsgOut = [];
+                    }
+                    //$('#log2').append('<br>' + $('<div/>').text('sended: ' + msg.data).html());
+                    let json = convertJson(msg);
+
+                    let obj = JSON.parse(json);
+                    listMsgOut.push(obj);
+                    let msgs_text = [];
+                    for (let i in listMsgOut) {
+                        obj = listMsgOut[i];
+                        //$('#log3').append('<br>' + $('<div/>').text(map_msg[key]+"\r\n").html());
+                        let s = JSON.stringify(obj).replace(/\"/g, "'");
+                        msgs_text.push({"name": obj.name, "timestamp": obj.timestamp, "msg": s});
+                    }
+                    let textareaText = JSON.stringify(msgs_text, undefined, 2)
+                    document.getElementById('log2').innerHTML = textareaText;
+                }catch(err) {
+                    console.log(err);
+                    console.log(msg);
+                }
+               
+               //$('#log2').append(JSON.stringify(listMsgOut, undefined, 4));
+               //$('#table2').bootstrapTable({data: listMsgOut});
+            });
+
+            socket.on('mapMsgSerial', function(msg, cb) {
+                
+                let json =convertJson(msg);
+                let obj=JSON.parse(json);
+                let objName=obj.name;
+                if (obj.hasOwnProperty('source')){
+                    objName = objName+"["+obj.source+"]";
+                }
+                if (obj.hasOwnProperty('reference')){
+                    map_msg[objName+"."+obj.reference]=obj;
+                }else{
+                    map_msg[objName]=obj;
+                }
+                
+                ///$('#log3').empty();
+                let msgs=[];
+                let msgs_text=[];
+                for (let key in map_msg) {
+                    //$('#log3').append('<br>' + $('<div/>').text(map_msg[key]+"\r\n").html());
+                    let obj=map_msg[key];
+                    msgs.push(obj);
+                    let s = JSON.stringify(obj).replace(/\"/g,"'");
+                    msgs_text.push({"name":obj.name,"timestamp":obj.timestamp,"msg":s});
+                }
+                let textareaText=JSON.stringify(msgs_text, undefined, 2)
+                document.getElementById('log3').innerHTML = textareaText;
+                
+                
+                
+                //$('#log3').append(textareaText);
+                //$('#table3').bootstrapTable({data: msgs});
+                //editor.set(map_msg)
+
+            });
+
+
+            socket.on('ActionPending', function(msg) {
+               //$('#log4').append('<br>' + $('<div/>').text('ActionPending: ' + msg.data).html());
+               try{
+                    let json =convertJson(msg);
+                    let obj=JSON.parse(json);
+                    mapActionPending[obj.name+"["+obj.action_id+"]"]=obj
+                    let msgs=[];
+                    let msgs_text=[];
+                    for (let key in mapActionPending) {
+                        //$('#log3').append('<br>' + $('<div/>').text(map_msg[key]+"\r\n").html());
+                        let obj=mapActionPending[key];
+                        msgs.push(obj);
+                        let s = JSON.stringify(obj).replace(/\"/g,"'");
+                        msgs_text.push({"name":obj.name,"timestamp":obj.timestamp,"msg":s});
+                    }
+                    let textareaText=JSON.stringify(msgs_text, undefined, 2)
+                    document.getElementById('log4').innerHTML = textareaText;
+            
+               }
+                catch(err) {
+                    console.log(err);
+                    console.log(msg);
+                }
+               //$('#table4').bootstrapTable({data: listActionPending});
+                //if (cb)
+                    //cb();
+            });
+            
+            socket.on('ActionReceived', function(msg) {
+                try{
+                    let json =convertJson(msg);
+                    let obj=JSON.parse(json);
+                    mapActionReceived[obj.request.name+"["+obj.request.action_id+"]"]=obj
+                    let msgs=[];
+                    let msgs_text=[];
+                    for (let key in mapActionReceived) {
+                        //$('#log3').append('<br>' + $('<div/>').text(map_msg[key]+"\r\n").html());
+                        let obj=mapActionReceived[key];
+                        msgs.push(obj);
+                        let s = JSON.stringify(obj).replace(/\"/g,"'");
+                        msgs_text.push({"name":key,"timestamp":obj.timestamp,"msg":s});
+                    }
+                    let textareaText=JSON.stringify(msgs_text, undefined, 2)
+                    document.getElementById('log5').innerHTML = textareaText;
+            
+               }
+                catch(err) {
+                    console.log(err);
+                    console.log(msg);
+                }
+               //$('#table5').bootstrapTable({data: listActionReceived});
+
+            });
+            socket.on('Error', function(msg) {
+                try{
+                    let json =convertJson(msg);
+                    let obj=JSON.parse(json);
+                    list_error.append(obj);
+                    let msgs=[];
+                    let msgs_text=[];
+                    for (let obj in list_error) {
+                        //$('#log3').append('<br>' + $('<div/>').text(map_msg[key]+"\r\n").html());
+                        let obj=mapActionReceived[key];
+                        msgs.push(obj);
+                        msgs_text.push({"name":key,"timestamp":obj.timestamp,"obj":obj});
+                    }
+                    //let textareaText=JSON.stringify(msgs_text, undefined, 2)
+                    //document.getElementById('log6').innerHTML = textareaText;
+            
+               }
+                catch(err) {
+                    console.log(err);
+                    console.log(msg);
+                }
+               //$('#table5').bootstrapTable({data: listActionReceived});
+
+            });
+            
+            // Interval function that tests message latency by sending a "ping"
+            // message. The server then responds with a "pong" message and the
+            // round trip time is measured.
+            /*
+            var ping_pong_times = [];
+            var start_time;
+            window.setInterval(function() {
+                start_time = (new Date).getTime();
+                socket.emit('my_ping');
+            }, 1000);
+
+            // Handler for the "pong" message. When the pong is received, the
+            // time from the ping is stored, and the average of the last 30
+            // samples is average and displayed.
+            socket.on('my_pong', function() {
+                var latency = (new Date).getTime() - start_time;
+                ping_pong_times.push(latency);
+                ping_pong_times = ping_pong_times.slice(-30); // keep last 30 samples
+                var sum = 0;
+                for (var i = 0; i < ping_pong_times.length; i++)
+                    sum += ping_pong_times[i];
+                $('#ping-pong').text(Math.round(10 * sum / ping_pong_times.length) / 10);
+            });
+
+            // Handlers for the different forms in the page.
+            // These accept data from the user and send it to the server in a
+            // variety of ways
+            $('form#emit').submit(function(event) {
+                socket.emit('my_event', {data: $('#emit_data').val()});
+                return false;
+            });
+            $('form#broadcast').submit(function(event) {
+                socket.emit('my_broadcast_event', {data: $('#broadcast_data').val()});
+                return false;
+            });
+            $('form#join').submit(function(event) {
+                socket.emit('join', {room: $('#join_room').val()});
+                return false;
+            });
+            $('form#leave').submit(function(event) {
+                socket.emit('leave', {room: $('#leave_room').val()});
+                return false;
+            });
+            $('form#send_room').submit(function(event) {
+                socket.emit('my_room_event', {room: $('#room_name').val(), data: $('#room_data').val()});
+                return false;
+            });
+            $('form#close').submit(function(event) {
+                socket.emit('close_room', {room: $('#close_room').val()});
+                return false;
+            });
+            $('form#disconnect').submit(function(event) {
+                socket.emit('disconnect_request');
+                return false;
+            });*/
+        });
+    </script>
+{% endblock %}
+{%block content%}
+    <div class="md-form w-100">
+        <div class="md-form mb-4 orange-textarea active-orange-textarea-2">
+            <h3><label for="log1">Receive mapMsgIN </label></h3>
+            <textarea id="log1" class="md-textarea form-control" rows="7"></textarea>
+            <button class="filter-form-toggle btn btn-primary" onClick="manageEdit(this,0,map_MsgIn)">Edita</button>
+            <div id="jsoneditor1" ></div>
+         </div>
+        <div class="md-form mb-4 blue-textarea active-blue-textarea-2" >
+            <h3><label for="log2"> Receive mapMsgOUT</label></h3>
+            <textarea id="log2" class="md-textarea form-control"  rows="7"></textarea>
+            <button class="filter-form-toggle btn btn-primary" onClick="manageEdit(this,1,listMsgOut)">Edita</button>
+            <div id="jsoneditor2" ></div>
+        </div>
+        <div class="md-form mb-4 pink-textarea active-pink-textarea-2" >
+            <h3><label for="log3"> Receive mapMsgSerial</label></h3>
+            <textarea id="log3" class="md-textarea form-control"  rows="7" ></textarea>
+            <button class="filter-form-toggle btn btn-primary" onClick="manageEdit(this,2,map_msg)">Edita</button>
+            <div id="jsoneditor3" ></div>
+        </div>
+        <div class="md-form mb-4 yellow-textarea active-yellow-textarea-2" >  
+            <!--dd><div id="log3"></div></dd-->
+                <h3><label for="log4"> Sended ActionPending</label></h3>
+                <textarea id="log4" class="md-textarea form-control" rows="7" ></textarea>
+                <button class="filter-form-toggle btn btn-primary" onClick="manageEdit(this,3,mapActionPending)">Edita</button>
+                <div id="jsoneditor4" ></div>
+        </div>
+        <div class="md-form mb-4 green-textarea active-green-textarea-2">
+            <h3><label for="log5"> Receive Ack ActionReceived</label></h3>
+            <textarea id="log5" class="md-textarea form-control" rows="7"></textarea>
+            <button class="filter-form-toggle btn btn-primary" onClick="manageEdit(this,4,mapActionReceived)">Edita</button>
+            <div id="jsoneditor5" ></div>
+        </div>
+    </div>       
+{% endblock %}

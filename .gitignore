@@ -1,0 +1,11 @@
+log
+.idea/
+.vscode/
+__pycache__/
+.github
+venv/*
+.venv/*
+*/logPlayerUDP/
+/logPlayerUDP/
+static/node_modules
+SerialMsgExample/log/*

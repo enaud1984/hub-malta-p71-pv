@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% from "_formhelpers.html" import render_field %}
+{% block content %}
+<form method=post>
+  {% if msg %}
+    <h5>{{msg}}</h5>
+  {%endif%}
+  <div class="col-md-4">
+  <table class="table table-bordered table-striped ">{{ render_field(form.selectDestination) }}
+
+    {{ form.hidden_tag() }}
+      {{ render_field(form.configuration_request) }}
+      {{ render_field(form.action_id) }}
+    </table>
+  <p><input type=submit value=Send_Message></p>
+  </div>
+</form>
+{% endblock %}

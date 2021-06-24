@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% from "_formhelpers.html" import render_field %}
+{% block scripts %}
+<script src="//code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf-8">
+        function check_option() {
+          let kinematics_type=document.getElementById('kinematics_type');
+          let form=document.getElementById('form');
+          if(kinematics_type){
+            form.action='?change=true&kinematics_type='+kinematics_type.value;
+            form.submit();
+          }
+        }
+        function submitDesign(){
+          let kinematics_type=document.getElementById('kinematics_type');
+          let form=document.getElementById('form');
+          form.action='?kinematics_type='+kinematics_type.value;
+          form.submit();
+        }
+ </script>
+{%endblock %}
+{%block content%}
+<form name="form" id="form"  method=post>
+  {% if msg %}
+    <h5>{{msg}}</h5>
+  {%endif%}
+  {{ form.hidden_tag() }}
+  {{ form.csrf_token() }}
+  <div class="col-md-7">
+  <table class="table table-bordered table-striped ">
+    {{ render_field(form.action_id) }}
+    {{ render_field(form.selectDestination) }}
+    {{ render_field(form.designation_type) }}
+    {{ render_field(form.threat_key) }}
+    {{ render_field(form.designation_control_pause) }}
+    {{ render_field(form.firing_authorization) }}
+    {{ render_field(form.cstn) }}
+    {#{ render_field(form.seconds,"datetime-local") }#}
+    <tr>
+      <th scope="row">
+      Seconds:
+      </th>
+      <td>
+    <input type="datetime-local" step="1" class="form-control" id="seconds" name="seconds" placeholder="Seconds...">
+    </td>
+    </tr>
+
+    {{ render_field(form.microseconds) }}
+
+      <tr>
+        <th scope="row">{{form.kinematics_type.label}}</th>
+        <td>{{ form.kinematics_type(onchange="check_option();") }}</td>
+      </tr>
+    {% if form.kinematics: %}
+    {% for f in form.kinematics: %}
+    {{ form.csrf_token() }}
+        {{ render_field(f) }}
+      {% endfor %}
+    {% endif %}
+  </table>
+  <p><input type=submit value=Send_Message onclick="submitDesign()"></p>
+  </div>
+</form>
+{% endblock %}
+
