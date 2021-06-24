@@ -785,7 +785,7 @@ class SCGP_CS_tracker_report_INS( UDPAdapter ):
     state=0                   # 24	2	1	Enum	0 : Not tracking;1 : Tracking; 2 : Memory;	Specifica lo stato del tracking (Memory: bersaglio perso, tentativo di riaggancio automatico in corso)
     window_resize=0           #	26	1	1	Enum	0 : No change (Not Used); 1 : Window Size Decreased; 2 : Window Size Increased;	Tellback del commando di ridimensionamento della finestra di tracker.
 
-    formato_payload = "Ihhhh"
+    formato_payload = "Ihhhb"
     def getListAttribute(self):
         return ["action_id","enabled","algorithm","state","window_resize"]
     
