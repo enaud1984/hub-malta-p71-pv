@@ -8,7 +8,7 @@ import datetime
 from utility import setup_logger
 import os
 import numpy as np
-from manageUDP import CUSTOM_ARGS,mapMsgUdpIN
+from manageUDP import CUSTOM_ARGS
 from decoder_scg import DecodeStruct,ActionManager
 from manageSCGF import *
 from manageGW import *
@@ -336,8 +336,8 @@ def send_UDP_from(resource, req):
                 t="%.6f" % time()
                 attribute=getattr(obj,k)
                 timeunix=t.split(".")
-                attribute.seconds=0#int(timeunix[0])
-                attribute.microseconds=0#int(timeunix[1])
+                attribute.seconds=int(timeunix[0])
+                attribute.microseconds=int(timeunix[1])
                 
         msg_name = obj.__class__.__name__
         response_class = resource.resp_msg_classes[destinationSCG.index(d)]
@@ -349,6 +349,12 @@ def send_UDP_from(resource, req):
                 logger.error(f"obj without action id attribute {destination}")
             obj.sendUDP( msg_name,action_id)
             sleep(MAX_TIME_TO_SEND)
+            if hasattr(obj, "kinematics_time_of_validity"):
+                t="%.6f" % time()
+                attribute=getattr(obj,"kinematics_time_of_validity")
+                timeunix=t.split(".")
+                attribute.seconds=int(timeunix[0])
+                attribute.microseconds=int(timeunix[1])
             if SIMULATOR_RESPONSE:
                 destination=resource.resp_msg_classes[destinationSCG.index(d)]
                 cls=ut.getManagerClass(destination)
@@ -369,8 +375,8 @@ def send_UDP_from(resource, req):
                 break
             else:
                 destination = resource.resp_msg_classes[destinationSCG.index( d )]
-                if destination in mapMsgUdpIN:
-                    obj_resp = mapMsgUdpIN[destination]
+                if destination in ActionManager.mapMsgIn:
+                    obj_resp = ActionManager.mapMsgIn[destination]
                     resp = repr( obj_resp ).replace( ":b'", ":'" ).replace( ",}", "}" )
                     logger.debug( "Risposta ricevuta {} {}".format( action_id, resp ) )
                     print( "Risposta ricevuta {} {}".format( action_id, resp ) )

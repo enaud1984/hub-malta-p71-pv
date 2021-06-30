@@ -169,7 +169,7 @@ class SCGP_MULTI_health_status_INS( UDPAdapter):
         return SCGP
 
     ip = IP_SCGP_MULTI
-    port = 50220
+    port = 50227
     formato_payload = "hhhBBBBBBBBBBBBBBBB"
     # DATA
     configuration = 0  # 16	2	1	Enum	0 : Local;	1 : Autonomous;	2 : Integrated;	Indica la Configurazione corrente del Sottosistema.
@@ -783,9 +783,9 @@ class SCGP_CS_tracker_report_INS( UDPAdapter ):
     enabled=0                 #	20	2	1	Enum	1 : OFF; 2 : ON;	Specifica se il tracker è abilitato o disabilitato. Quando abilitato compare a video la finestra di tracker.
     algorithm=0               # 22	2	1	Enum	1 : Correlation; 2 : Contrast;	Specifica l’algoritmo di tracker selezionato.
     state=0                   # 24	2	1	Enum	0 : Not tracking;1 : Tracking; 2 : Memory;	Specifica lo stato del tracking (Memory: bersaglio perso, tentativo di riaggancio automatico in corso)
-    window_resize=0           #	26	1	1	Enum	0 : No change (Not Used); 1 : Window Size Decreased; 2 : Window Size Increased;	Tellback del commando di ridimensionamento della finestra di tracker.
+    window_resize=b'0'           #	26	1	1	Enum	0 : No change (Not Used); 1 : Window Size Decreased; 2 : Window Size Increased;	Tellback del commando di ridimensionamento della finestra di tracker.
 
-    formato_payload = "Ihhhb"
+    formato_payload = "IhhhB"
     def getListAttribute(self):
         return ["action_id","enabled","algorithm","state","window_resize"]
     

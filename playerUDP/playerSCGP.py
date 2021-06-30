@@ -206,6 +206,8 @@ def dump(filepcap,send=False):
         mapTime={}
         mapMsgDump=[]
         cap = pyshark.FileCapture(filepcap)
+        i=0
+        last_timestamp_s=0
         for packet in cap:
             if hasattr(packet,"data") and hasattr(packet,"udp"):
                 message=packet.data.data
@@ -224,28 +226,44 @@ def dump(filepcap,send=False):
                 '''
                 msgName=""
                 id,sender,length,timestamp_s, timestamp_ms = unpack_from( ">Ihhll", binar)
+                if port_dst==123:
+                    from ntp.server_ntp import NTPPacket
+                    t=NTPPacket()
+                    t.from_data( binar )
+                    tm=t.GetTxTimeStamp()
+                    logger.info(f"timestamp {tm}")
                 if id in mapManager:
                     obj=mapManager[id]
+                    if port_dst!=obj.port or sender!=obj.getMsgSender() or obj.ip!=ip_dst:
+                        logger.error( f"{i} ->{id} error {port_dst}!={obj.port} or {sender}!={obj.getMsgSender()} or {obj.ip}!={ip_dst}")
                     msgName=type(obj)
                     obj.decode(binar)
                     mapMsgDump.append(obj)
+                    time_of_validity = datetime.fromtimestamp( int(timestamp_s) ).strftime( '%Y-%m-%d %H:%M:%S' )
                     if obj.__class__.__name__=="SCGF_MULTI_health_status_INS":
                             obj.warning_list.failure_byte_01=b'38' #0011 1000
                             analyzeUserStatus(NAVS_MULTI_health_status_INS,0x40000002)
                             test_alarm = False
                     elif obj.__class__.__name__=="GW_SCGP_designation_order_INS":
+                            binar2 = obj.getData( True )
+                            checkIntegrity( binar, binar2, obj )
                             print(f"{obj}")
                             #obj.warning_list.failure_byte_01=b'38' #0011 1000
-                    else:
-                        logger.info("{} length: {} id: {} {}".format(obj.__class__,length,id,str(obj.values())))
+                    logger.info("{}\t{}\t{}\t{}\tlength:{}\tid:{}\t{}".format(time_of_validity,i,'->' if obj.__class__.__name__.startswith("GW") else'<-',obj.__class__.__name__,length,id,str(obj.values())))
                     if hasattr(obj,"action_id"):
                         mapDistinctAction[f"{msgName}[{obj.action_id}]"]=obj.values()
                     elif hasattr(obj,"reported_action_id"):
                         mapDistinctAction[f"{msgName}[{obj.reported_action_id}]"]=obj.values()
                     else:
                         mapDistinctAction[f"{msgName}"]=obj.values()
+                    last_timestamp_s = timestamp_s
                 elif sender !=25:
-                    logger.info("{} {}".format(id,msgName))
+                    if last_timestamp_s>0 and timestamp_s-last_timestamp_s<100:
+                        time_of_validity = datetime.fromtimestamp( int(timestamp_s) ).strftime( '%Y-%m-%d %H:%M:%S' )
+                        last_timestamp_s=timestamp_s
+
+                    logger.info("time_of_validity:{}\t{} id:{} sender:{},length:{}:".format(time_of_validity,i,id,sender,length))
+                i+=1
             else:
                 logger.debug(packet)
                 logger.debug("{} {} {} {}".format(id,sender,length,timestamp_s, timestamp_ms))
@@ -283,11 +301,11 @@ if __name__ == "__main__":
         initLogger()
         initMapMsg()
         initMapManager()
-        for f in ['designation.pcapng']:
+        for f in ['testDesign01_eth1.pcap']:
             fileCapture=os.path.join(base_dir,f)
             dump(fileCapture,False)
         for f in ['health_status.pcap','prova_sede.pcapng','servo.pcapng']:
             fileCapture=os.path.join(base_dir,f)
-            play(fileCapture,True)
+            #play(fileCapture,True)
     except Exception as e:
         print("Eccezione",e)
